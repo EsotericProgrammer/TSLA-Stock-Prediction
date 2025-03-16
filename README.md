@@ -1,2 +1,5 @@
 # TSLA-Stock-Prediction
-TSLA Stock prediction
+
+Setup
+
+1. Install all imported modules
