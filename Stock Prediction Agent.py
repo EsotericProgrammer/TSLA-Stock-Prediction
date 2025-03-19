@@ -30,6 +30,7 @@ tesla_data = yf.download(ticker, start=start_date, end=end_date)
 # print(tesla_data)
 
 #Feature Engineering
+
 #Simple Moving Average(SMA) for 5 days
 #Data Smoothing
 tesla_data['SMA_5'] = tesla_data['Close'].rolling(window=5).mean()
