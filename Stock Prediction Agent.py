@@ -79,7 +79,6 @@ plt.show()
 # decision()
 # #input("Press Enter to exit...")
 
-
 # # Define the task to run every second
 # def job():
 #     print("Executing the event every second!")
