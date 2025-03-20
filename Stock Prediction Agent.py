@@ -5,6 +5,7 @@ from datetime import datetime
 import yfinance as yf
 import schedule
 import time
+import matplotlib.pyplot as plt
 
 #Goal: Maximize Profits
 
@@ -64,10 +65,16 @@ ticker = "TSLA"
 start_date = "2025-01-01"
 end_date = "2025-03-15" #Change this to be dynamic??
 tesla_data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)  #auto_adjust=True is a form of data preparation because its not raw data and ignores corporate decisions
-print(tesla_data)
+# print(tesla_data)
+
+# Download historical data for a stock
+stock_data = yf.download(ticker, start=start_date, end=end_date)
+
+# Plot closing price
+stock_data['Close'].plot(title="Tesla Stock Price")
+plt.show()
 
 #Get stock data for Tesla
-# ticker = "TSLA"
 # stock = yf.Ticker(ticker)
 # current_price = round(stock.history(period="1d")['Close'][0], 2)
 # print(f"Current price of Tesla Inc Stock ({ticker}): {current_price} USD")
