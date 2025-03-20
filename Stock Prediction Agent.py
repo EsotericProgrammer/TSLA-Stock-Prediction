@@ -21,31 +21,23 @@ num_of_stocks_owned = 0
 total_stocks_bought = 0
 total_stocks_sold = 0
 
-#Download Previous Tesla stock data
-ticker = "TSLA"
-start_date = "2025-01-01"
-end_date = "2025-03-15"
-tesla_data = yf.download(ticker, start=start_date, end=end_date)
+# #Feature Engineering
+
+# #Simple Moving Average(SMA) for 5 days
+# #Data Smoothing
+# tesla_data['SMA_5'] = tesla_data['Close'].rolling(window=5).mean()
+
+# #Relative Strength Index(RSI) for 14 days
+# delta = tesla_data['Close'].diff()
+# gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
+# loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+# rs = gain / loss
+# tesla_data['RSI'] = 100 - (100 / (1 + rs))
+
+# #Fill missing values(NaNs) with the previous value or mean
+# tesla_data.bfill(inplace=True)
 
 # print(tesla_data)
-
-#Feature Engineering
-
-#Simple Moving Average(SMA) for 5 days
-#Data Smoothing
-tesla_data['SMA_5'] = tesla_data['Close'].rolling(window=5).mean()
-
-#Relative Strength Index(RSI) for 14 days
-delta = tesla_data['Close'].diff()
-gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
-loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-rs = gain / loss
-tesla_data['RSI'] = 100 - (100 / (1 + rs))
-
-#Fill missing values(NaNs) with the previous value or mean
-tesla_data.bfill(inplace=True)
-
-print(tesla_data)
 
 
 def decision():
@@ -61,14 +53,21 @@ def hold():
     print("Hold")
 
 
+#Main
+print("##########TSLA Stock prediction:ML Trading Agent for Tesla Stocks##########")
 
-# print("##########TSLA Stock prediction:ML Trading Agent for Tesla Stocks##########")
+current_datetime = datetime.now()
+formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+print("Time: ", formatted_datetime)
 
-# current_datetime = datetime.now()
-# formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-# print("Time: ", formatted_datetime)
+#Download Previous Tesla stock data
+ticker = "TSLA"
+start_date = "2025-01-01"
+end_date = "2025-03-15" #Change this to be dynamic??
+tesla_data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)  #auto_adjust=True is a form of data preparation because its not raw data and ignores corporate decisions
+print(tesla_data)
 
-# #Get stock data for Tesla
+#Get stock data for Tesla
 # ticker = "TSLA"
 # stock = yf.Ticker(ticker)
 # current_price = round(stock.history(period="1d")['Close'][0], 2)
