@@ -5,7 +5,6 @@ from datetime import datetime
 import yfinance as yf
 import schedule
 import time
-# import sklearn
 
 #Goal: Maximize Profits
 
