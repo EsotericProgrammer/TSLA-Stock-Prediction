@@ -67,11 +67,7 @@ end_date = "2025-03-15" #Change this to be dynamic??
 tesla_data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)  #auto_adjust=True is a form of data preparation because its not raw data and ignores corporate decisions
 # print(tesla_data)
 
-# Download historical data for a stock
-stock_data = yf.download(ticker, start=start_date, end=end_date)
-
-# Plot closing price
-stock_data['Close'].plot(title="Tesla Stock Price")
+tesla_data['Close'].plot(title="Tesla Stock Price")
 plt.show()
 
 #Get stock data for Tesla
