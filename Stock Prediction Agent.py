@@ -72,9 +72,6 @@ def train_model(data):
     
     return model
 
-def decision():
-    print("WIP")
-
 def sell(amount):
     print("Sell " + str(amount) + " Stocks")
 
@@ -84,6 +81,55 @@ def buy(amount):
 def hold():
     print("Hold")
 
+# Step 4: Simulate Trading
+class TradingAgent:
+    def __init__(self, capital=starting_balance):
+        self.capital = capital
+        self.shares = 0
+        self.transaction_fee = transaction_fee
+        self.history = []
+        
+    def trade(self, action, price, amount=0):
+        if action == "Buy":
+            total_cost = amount * (1 + self.transaction_fee)
+            if self.capital >= total_cost:
+                self.shares += amount
+                self.capital -= total_cost
+                self.history.append(f"Bought {amount} shares at ${price} each")
+        elif action == "Sell":
+            total_revenue = amount * price * (1 - self.transaction_fee)
+            if self.shares >= amount:
+                self.shares -= amount
+                self.capital += total_revenue
+                self.history.append(f"Sold {amount} shares at ${price} each")
+        elif action == "Hold":
+            self.history.append("Held position")
+        
+    def get_balance(self, current_price):
+        return self.capital + self.shares * current_price
+
+# Step 5: Main Simulation Loop
+def run_simulation(data, model, agent):
+    for current_day in simulation_days:
+        day_data = data.loc[data.index.date == current_day.date()]
+        if not day_data.empty:
+            current_price = day_data['Close'].iloc[-1]
+            X_today = day_data[['SMA_5', 'SMA_20', 'EMA_12', 'EMA_26', 'RSI']].iloc[-1].values.reshape(1, -1)
+            prediction = model.predict(X_today)
+            
+            if prediction == 1:
+                action = "Buy"
+                # Use a portion of the capital to buy shares
+                amount_to_buy = agent.capital // current_price
+                agent.trade(action, current_price, amount_to_buy)
+            elif prediction == 0 and agent.shares > 0:
+                action = "Sell"
+                agent.trade(action, current_price, agent.shares)
+            else:
+                action = "Hold"
+                agent.trade(action, current_price)
+
+            print(f"Day: {current_day.date()} | Action: {action} | Balance: ${agent.get_balance(current_price):.2f}")
 
 #Main
 print("##########TSLA Stock prediction:ML Trading Agent for Tesla Stocks##########")
@@ -107,7 +153,10 @@ stock = yf.Ticker(ticker)
 current_price = round(stock.history(period="1d")['Close'].iloc[0], 2)
 print(f"Current price of Tesla Inc Stock ({ticker}): {current_price} USD")
 print("Agent's Recommendation:")
-# decision()
 
 tesla_data = engineer_features(tesla_data)
 model = train_model(tesla_data)
+
+# Initialize agent and run the simulation
+agent = TradingAgent(capital=starting_balance)
+run_simulation(tesla_data, model, agent)
