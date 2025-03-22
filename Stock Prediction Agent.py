@@ -72,16 +72,6 @@ def train_model(data):
     
     return model
 
-def sell(amount):
-    print("Sell " + str(amount) + " Stocks")
-
-def buy(amount):
-    print("Buy " + str(amount) + " Stocks")
-
-def hold():
-    print("Hold")
-
-# Step 4: Simulate Trading
 class TradingAgent:
     def __init__(self, capital=starting_balance):
         self.capital = capital
@@ -108,7 +98,6 @@ class TradingAgent:
     def get_balance(self, current_price):
         return self.capital + self.shares * current_price
 
-# Step 5: Main Simulation Loop
 def run_simulation(data, model, agent):
     for current_day in simulation_days:
         day_data = data.loc[data.index.date == current_day.date()]
@@ -157,6 +146,6 @@ print("Agent's Recommendation:")
 tesla_data = engineer_features(tesla_data)
 model = train_model(tesla_data)
 
-# Initialize agent and run the simulation
+#Create agent and run simulation
 agent = TradingAgent(capital=starting_balance)
 run_simulation(tesla_data, model, agent)
