@@ -15,6 +15,7 @@ from sklearn.metrics import accuracy_score
 #Constraints
 starting_balance = 10000 #USD
 transaction_fee = 0.01  # 1% applies to each Buy or Sell order.
+simulation_days = pd.date_range("2025-03-24", "2025-03-28", freq='B')  # 5 trading days
 
 #Real time variables
 current_balance = starting_balance
@@ -50,22 +51,22 @@ def engineer_features(data):
 
 #Model Training
 def train_model(data):
-    # We want to predict whether the price will go up (1) or down (0)
+    #Predict whether the price will go up (1) or down (0)
     data['Target'] = (data['Close'].shift(-1) > data['Close']).astype(int)
     
-    # Select features and target
+    #Select features and target
     features = ['SMA_5', 'SMA_20', 'EMA_12', 'EMA_26', 'RSI']
     X = data[features]
     y = data['Target']
     
-    # Split into training and testing sets
+    #Split into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
     
-    # Train a Random Forest model
+    #Train a Random Forest model
     model = RandomForestClassifier(n_estimators=100)
     model.fit(X_train, y_train)
     
-    # Test the model
+    #Test the model
     y_pred = model.predict(X_test)
     print(f"Model Accuracy: {accuracy_score(y_test, y_pred)}")
     
