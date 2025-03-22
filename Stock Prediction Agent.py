@@ -10,8 +10,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-#Goal: Maximize Profits
-
 #Constraints
 starting_balance = 10000 #USD
 transaction_fee = 0.01  # 1% applies to each Buy or Sell order.
@@ -108,7 +106,6 @@ def run_simulation(data, model, agent):
             
             if prediction == 1:
                 action = "Buy"
-                # Use a portion of the capital to buy shares
                 amount_to_buy = agent.capital // current_price
                 agent.trade(action, current_price, amount_to_buy)
             elif prediction == 0 and agent.shares > 0:
@@ -130,7 +127,7 @@ print("Time: ", formatted_datetime)
 #Download Previous Tesla stock data
 ticker = "TSLA"
 start_date = "2025-01-01"
-end_date = "2025-03-20" #Change this to be dynamic??
+end_date = "2025-03-22"
 tesla_data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)  #auto_adjust=True is a form of data preparation because its not raw data and ignores corporate decisions
 
 # print(tesla_data)
@@ -141,7 +138,6 @@ tesla_data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=Tru
 stock = yf.Ticker(ticker)
 current_price = round(stock.history(period="1d")['Close'].iloc[0], 2)
 print(f"Current price of Tesla Inc Stock ({ticker}): {current_price} USD")
-print("Agent's Recommendation:")
 
 tesla_data = engineer_features(tesla_data)
 model = train_model(tesla_data)
