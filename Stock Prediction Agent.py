@@ -105,9 +105,11 @@ def run_simulation(data, model, agent):
                 action = "Buy"
                 amount_to_buy = agent.capital // current_price
                 agent.trade(action, current_price, amount_to_buy)
+
             elif prediction == 0 and agent.shares > 0:
                 action = "Sell"
                 agent.trade(action, current_price, agent.shares)
+                
             else:
                 action = "Hold"
                 agent.trade(action, current_price)
