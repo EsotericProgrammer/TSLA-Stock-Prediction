@@ -54,8 +54,6 @@ def train_model(data):
     #Select features and target
     features = ['SMA_5', 'SMA_20', 'EMA_12', 'EMA_26', 'RSI']
 
-    #data[features] = data[features].fillna(data[features].mean())
-
     #Predict whether the price will go up (1) or down (0)
     data['Target'] = (data['Close'].shift(-1) > data['Close']).astype(int)
 
