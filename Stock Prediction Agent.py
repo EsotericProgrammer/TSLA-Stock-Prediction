@@ -29,7 +29,6 @@ def engineer_features(data):
     #Exponential Moving Averages(EMA)
     data['EMA_12'] = data['Close'].ewm(span=12, adjust=False).mean()
     data['EMA_26'] = data['Close'].ewm(span=26, adjust=False).mean()
-    print("EMA_26" + str(data['EMA_26']))
 
     #Relative Strength Index(RSI)
     delta = data['Close'].diff()
@@ -37,6 +36,8 @@ def engineer_features(data):
     loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
     rs = gain / loss
     data['RSI'] = 100 - (100 / (1 + rs))
+
+    print("RSI" + str(data['RSI']))
 
     #Drop missing values due to rolling calculations
     data = data.dropna()
