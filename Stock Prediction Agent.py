@@ -15,13 +15,11 @@ starting_balance = 10000 #USD
 transaction_fee = 0.01  # 1% applies to each Buy or Sell order.
 simulation_days = pd.date_range("2025-03-24", "2025-03-28", freq='B')  # 5 trading days
 
+test_days = pd.date_range("2025-03-17", "2025-03-21", freq='B')
+
 #Real time variables
 current_balance = starting_balance
 num_of_stocks_owned = 0
-
-#Historical variables
-total_stocks_bought = 0
-total_stocks_sold = 0
 
 #Feature Engineering
 def engineer_features(data):
