@@ -40,17 +40,18 @@ def engineer_features(data):
     #Drop missing values due to rolling calculations
     data = data.dropna()
 
-    print("RSI" + str(data['RSI']))
+    # print("RSI" + str(data['RSI']))
 
     return data
 
 #Model Training
 def train_model(data):
-    #Predict whether the price will go up (1) or down (0)
-    data['Target'] = (data['Close'].shift(-1) > data['Close']).astype(int)
-    
     #Select features and target
     features = ['SMA_5', 'SMA_20', 'EMA_12', 'EMA_26', 'RSI']
+
+    #Predict whether the price will go up (1) or down (0)
+    data['Target'] = (data['Close'].shift(-1) > data['Close']).astype(int)
+
     X = data[features]
     y = data['Target']
     
@@ -142,5 +143,5 @@ tesla_data = engineer_features(tesla_data)
 model = train_model(tesla_data)
 
 #Create agent and run simulation
-# agent = TradingAgent(capital=starting_balance)
-# run_simulation(tesla_data, model, agent)
+agent = TradingAgent(capital=starting_balance)
+run_simulation(tesla_data, model, agent)
