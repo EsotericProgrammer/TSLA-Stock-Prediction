@@ -37,10 +37,10 @@ def engineer_features(data):
     rs = gain / loss
     data['RSI'] = 100 - (100 / (1 + rs))
 
-    print("RSI" + str(data['RSI']))
-
     #Drop missing values due to rolling calculations
     data = data.dropna()
+
+    print("RSI" + str(data['RSI']))
 
     return data
 
