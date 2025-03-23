@@ -35,6 +35,9 @@ def engineer_features(data):
     delta = data['Close'].diff()
     gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+
+    loss = loss.replace(0, 1e-10)
+
     rs = gain / loss
     data['RSI'] = 100 - (100 / (1 + rs))
 
@@ -52,7 +55,6 @@ def train_model(data):
     features = ['SMA_5', 'SMA_20', 'EMA_12', 'EMA_26', 'RSI']
 
     #data[features] = data[features].fillna(data[features].mean())
-
 
     #Predict whether the price will go up (1) or down (0)
     data['Target'] = (data['Close'].shift(-1) > data['Close']).astype(int)
@@ -148,5 +150,5 @@ tesla_data = engineer_features(tesla_data)
 model = train_model(tesla_data)
 
 #Create agent and run simulation
-agent = TradingAgent(balance=starting_balance)
-run_simulation(tesla_data, model, agent)
+# agent = TradingAgent(balance=starting_balance)
+# run_simulation(tesla_data, model, agent)
