@@ -19,7 +19,6 @@ test_days = pd.date_range("2025-03-17", "2025-03-21", freq='B')
 
 #Real time variables
 current_balance = starting_balance
-num_of_stocks_owned = 0
 
 #Feature Engineering
 def engineer_features(data):
