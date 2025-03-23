@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import GridSearchCV
 
 #Constraints
 starting_balance = 10000 #USD
@@ -46,8 +47,12 @@ def engineer_features(data):
 
 #Model Training
 def train_model(data):
+    
     #Select features and target
     features = ['SMA_5', 'SMA_20', 'EMA_12', 'EMA_26', 'RSI']
+
+    #data[features] = data[features].fillna(data[features].mean())
+
 
     #Predict whether the price will go up (1) or down (0)
     data['Target'] = (data['Close'].shift(-1) > data['Close']).astype(int)
@@ -69,8 +74,8 @@ def train_model(data):
     return model
 
 class TradingAgent:
-    def __init__(self, capital=starting_balance):
-        self.capital = capital
+    def __init__(self, balance=starting_balance):
+        self.balance = balance
         self.shares = 0
         self.transaction_fee = transaction_fee
         self.history = []
@@ -78,21 +83,21 @@ class TradingAgent:
     def trade(self, action, price, amount=0):
         if action == "Buy":
             total_cost = amount * price + (amount * price * self.transaction_fee)
-            if self.capital >= total_cost:
+            if self.balance >= total_cost:
                 self.shares += amount
-                self.capital -= total_cost
+                self.balance -= total_cost
                 self.history.append(f"Bought {amount} shares at ${price} each")
         elif action == "Sell":
             total_revenue = amount * price + (amount * price * self.transaction_fee)
             if self.shares >= amount:
                 self.shares -= amount
-                self.capital += total_revenue
+                self.balance += total_revenue
                 self.history.append(f"Sold {amount} shares at ${price} each")
         elif action == "Hold":
             self.history.append("Held position")
         
     def get_balance(self, current_price):
-        return self.capital + self.shares * current_price
+        return self.balance + self.shares * current_price
 
 def run_simulation(data, model, agent):
     for current_day in simulation_days:
@@ -104,7 +109,7 @@ def run_simulation(data, model, agent):
             
             if prediction == 1:
                 action = "Buy"
-                amount_to_buy = agent.capital // current_price
+                amount_to_buy = agent.balance // current_price
                 agent.trade(action, current_price, amount_to_buy)
 
             elif prediction == 0 and agent.shares > 0:
@@ -143,5 +148,5 @@ tesla_data = engineer_features(tesla_data)
 model = train_model(tesla_data)
 
 #Create agent and run simulation
-agent = TradingAgent(capital=starting_balance)
+agent = TradingAgent(balance=starting_balance)
 run_simulation(tesla_data, model, agent)
