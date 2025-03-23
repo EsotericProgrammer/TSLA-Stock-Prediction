@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score
 
 #Constraints
 starting_balance = 10000 #USD
-transaction_fee = 0.01  # 1% applies to each Buy or Sell order.
+transaction_fee = 0.01 #1% applies to each Buy or Sell order.
 simulation_days = pd.date_range("2025-03-24", "2025-03-28", freq='B')  # 5 trading days
 
 test_days = pd.date_range("2025-03-17", "2025-03-21", freq='B')
@@ -20,17 +20,16 @@ test_days = pd.date_range("2025-03-17", "2025-03-21", freq='B')
 #Real time variables
 current_balance = starting_balance
 
-#Feature Engineering
+#Feature Engineering(Fine)
 def engineer_features(data):
     #Simple Moving Averages(SMA) for 5 and 20 days
     data['SMA_5'] = data['Close'].rolling(window=5).mean()
     data['SMA_20'] = data['Close'].rolling(window=20).mean()
-    # print("SMA5" + str(data['SMA_5']))
-    # print("SMA20" + str(data['SMA_20']))
 
     #Exponential Moving Averages(EMA)
     data['EMA_12'] = data['Close'].ewm(span=12, adjust=False).mean()
     data['EMA_26'] = data['Close'].ewm(span=26, adjust=False).mean()
+    print("EMA_26" + str(data['EMA_26']))
 
     #Relative Strength Index(RSI)
     delta = data['Close'].diff()
@@ -76,13 +75,13 @@ class TradingAgent:
         
     def trade(self, action, price, amount=0):
         if action == "Buy":
-            total_cost = amount * (1 + self.transaction_fee)
+            total_cost = amount * price + (amount * price * self.transaction_fee)
             if self.capital >= total_cost:
                 self.shares += amount
                 self.capital -= total_cost
                 self.history.append(f"Bought {amount} shares at ${price} each")
         elif action == "Sell":
-            total_revenue = amount * price * (1 - self.transaction_fee)
+            total_revenue = amount * price + (amount * price * self.transaction_fee)
             if self.shares >= amount:
                 self.shares -= amount
                 self.capital += total_revenue
@@ -140,5 +139,5 @@ tesla_data = engineer_features(tesla_data)
 model = train_model(tesla_data)
 
 #Create agent and run simulation
-agent = TradingAgent(capital=starting_balance)
-run_simulation(tesla_data, model, agent)
+# agent = TradingAgent(capital=starting_balance)
+# run_simulation(tesla_data, model, agent)
